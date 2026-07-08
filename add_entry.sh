@@ -18,6 +18,8 @@ FILENAME=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr -cd '[:a
 
 POST_FILE="$POST_DIR/$FILENAME.html"
 
+TIMESTAMP=$(date "+%Y-%m-%d %H:%M")
+
 
 # Create post page
 cat > "$POST_FILE" <<EOF
@@ -65,7 +67,7 @@ EOF
 
 
 # Add entry to index.html before closing ul tag
-ENTRY="  <li><a href=\"posts/$FILENAME.html\"><strong>$TITLE</strong><br><span>$DESCRIPTION</span></a></li>"
+ENTRY="  <li><a href=\"posts/$FILENAME.html\">$TITLE</a>[$TIMESTAMP]</li>"
 
 awk -v entry="$ENTRY" '
 /<\/ul>/ {
@@ -79,15 +81,12 @@ awk -v entry="$ENTRY" '
 echo ""
 echo "Created:"
 echo "$POST_FILE"
-
 echo "Updated index.html"
 
 
 # Git commit
 git add index.html "$POST_FILE"
-
 git commit -m "Add post: $TITLE"
-
 git push
 
 
