@@ -49,7 +49,7 @@ p {
 }
 </style>
 
-</head>cd ~/projects/binaykg.github.io
+</head>
 
 <body>
 
