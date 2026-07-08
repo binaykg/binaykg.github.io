@@ -30,7 +30,7 @@ cat > "$POST_FILE" <<EOF
 
 <style>
 body {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: roboto;
   max-width: 700px;
   margin: 70px auto;
   padding: 20px;
@@ -49,7 +49,7 @@ p {
 }
 </style>
 
-</head>
+</head>cd ~/projects/binaykg.github.io
 
 <body>
 
@@ -67,7 +67,7 @@ EOF
 
 
 # Add entry to index.html before closing ul tag
-ENTRY="  <li><a href=\"posts/$FILENAME.html\">$TITLE</a>[$TIMESTAMP]</li>"
+ENTRY="  <li><a href=\"posts/$FILENAME.html\">$TITLE</a>    [$TIMESTAMP]</li>"
 
 awk -v entry="$ENTRY" '
 /<\/ul>/ {
@@ -84,14 +84,14 @@ echo "$POST_FILE"
 echo "Updated index.html"
 
 
+
 # Git commit
 #git add index.html "$POST_FILE"
 #git commit -m "Add post: $TITLE"
 #git push
 
-:'
 
-echo ""
-echo "Done!"
-echo "Committed and pushed to Git."
-'
+#echo ""
+#echo "Done!"
+#echo "Committed and pushed to Git."
+
