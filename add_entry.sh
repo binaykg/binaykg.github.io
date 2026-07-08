@@ -38,12 +38,12 @@ body {
 }
 
 h1 {
-  font-size: 36px;
+  font-size: 30px;
   margin-bottom: 30px;
 }
 
 p {
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1.6;
   color: #333;
 }
@@ -85,11 +85,13 @@ echo "Updated index.html"
 
 
 # Git commit
-git add index.html "$POST_FILE"
-git commit -m "Add post: $TITLE"
-git push
+#git add index.html "$POST_FILE"
+#git commit -m "Add post: $TITLE"
+#git push
 
+:'
 
 echo ""
 echo "Done!"
 echo "Committed and pushed to Git."
+'
