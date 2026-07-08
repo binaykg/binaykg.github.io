@@ -73,3 +73,17 @@ sed -i "/<\/ul>/i\\$ENTRY" index.html
 echo "Created:"
 echo "$POST_FILE"
 echo "Updated index.html"
+
+
+# Git commit
+git add index.html "$POST_FILE"
+
+git commit -m "Add post: $TITLE"
+
+# Push changes
+git push
+
+echo ""
+echo "Done!"
+echo "Created: $POST_FILE"
+echo "Committed and pushed to Git."
