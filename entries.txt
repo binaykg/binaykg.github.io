@@ -3,6 +3,14 @@
 <br>
 <small>https://www.oreilly.com/radar/radar-trends-to-watch-july-2026/</small>
 <br>
+<small>Created: 2026-07-08 15:02:56</small>
+</li>
+<br>
+<li>
+<a href="posts/radar-trends-to-watch-july-2026.html"><b>radar-trends-to-watch-july-2026</b></a>
+<br>
+<small>https://www.oreilly.com/radar/radar-trends-to-watch-july-2026/</small>
+<br>
 <small>Created: 2026-07-08 15:00:16</small>
 </li>
 <br>
