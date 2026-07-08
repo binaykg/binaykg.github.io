@@ -10,7 +10,7 @@ mkdir -p "$POST_DIR"
 echo "Create new post"
 
 read -p "Title: " TITLE
-read -p "Description: " DESCRIPTION
+read -p "Details: " DESCRIPTION
 read -p "Link: " LINK
 
 # Convert title to filename
@@ -19,41 +19,59 @@ POST_FILE="$POST_DIR/$FILENAME.html"
 
 # Create post page
 cat > "$POST_FILE" <<EOF
+
 <!DOCTYPE html>
 <html>
 <head>
-<title>$TITLE</title>
+<title>Post</title>
 
 <style>
 body {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  max-width: 700px;
-  margin: 70px auto;
+  margin: 0;
+  background: #fff;
   color: #1d1d1f;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+}
+
+.container {
+  max-width: 720px;
+  margin: 80px auto;
+  padding: 0 24px;
 }
 
 h1 {
-  font-size: 42px;
+  font-size: 38px;
+  font-weight: 600;
+  letter-spacing: -0.8px;
+  margin-bottom: 35px;
 }
 
-p {
-  font-size: 20px;
-  color: #666;
+.content {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #333336;
+}
+
+.content p {
+  margin-bottom: 24px;
 }
 </style>
 
 </head>
-
 <body>
 
-<h1>$TITLE</h1>
+<div class="container">
+<h1>$TITLE<</h1>
 
-<p>$DESCRIPTION</p>
-
+<div class="content">
+<p>$DESCRIPTION </p>
 <a href="$LINK">$LINK</a>
+</div>
+</div>
 
 </body>
 </html>
+
 EOF
 
 
