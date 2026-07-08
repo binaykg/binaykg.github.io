@@ -1,133 +1,75 @@
 #!/bin/bash
 
-read -p "Enter title: " TITLE
+# Folder where index.html exists
+BASE_DIR="$(pwd)"
+POST_DIR="$BASE_DIR/posts"
 
-read -p "Enter description: " DESCRIPTION
+# Create posts folder if missing
+mkdir -p "$POST_DIR"
 
+echo "Create new post"
 
-if [ -z "$TITLE" ]; then
-    echo "Title cannot be empty"
-    exit 1
-fi
+read -p "Title: " TITLE
+read -p "Description: " DESCRIPTION
+read -p "Link: " LINK
 
-# Create URL-friendly filename from title
-SLUG=$(echo "$TITLE" | \
-    tr '[:upper:]' '[:lower:]' | \
-    sed 's/ /-/g' | \
-    sed 's/[^a-z0-9-]//g')
+# Convert title to filename
+FILENAME=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | tr -cd '[:alnum:]-')
+POST_FILE="$POST_DIR/$FILENAME.html"
 
-# Date and time
-DATE=$(date +"%Y-%m-%d")
-DATETIME=$(date +"%Y-%m-%d %H:%M:%S")
-
-
-# Create posts directory if missing
-mkdir -p posts
-
-# Post filename
-POST="posts/$SLUG.html"
-
-# Create individual post page
-cat > "$POST" <<EOF
+# Create post page
+cat > "$POST_FILE" <<EOF
 <!DOCTYPE html>
 <html>
 <head>
-
 <title>$TITLE</title>
 
 <style>
 body {
-    font-family: Arial, sans-serif;
-    max-width: 800px;
-    margin: 40px auto;
-    line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  max-width: 700px;
+  margin: 70px auto;
+  color: #1d1d1f;
+}
+
+h1 {
+  font-size: 42px;
+}
+
+p {
+  font-size: 20px;
+  color: #666;
 }
 </style>
+
 </head>
+
 <body>
 
 <h1>$TITLE</h1>
-<p>
-<b>Created:</b> $DATETIME
-</p>
 
-<hr>
-<p>
-$DESCRIPTION
-</p>
-<br>
+<p>$DESCRIPTION</p>
 
-<a href="../index.html">Back to Log</a>
+<a href="$LINK">$LINK</a>
 
-</body>
-
-</html>
-EOF
-
-# Create entries storage file
-touch entries.txt
-
-# Add newest entry at the top of entries.txt
-echo "<li>
-<a href=\"$POST\"><b>$TITLE</b></a>
-<br>
-<small>$DESCRIPTION</small>
-<br>
-<small>Created: $DATETIME</small>
-</li>
-<br>" | cat - entries.txt > entries.tmp
-
-mv entries.tmp entries.txt
-
-# Rebuild index.html
-
-cat > index.html <<EOF
-<!DOCTYPE html>
-<html>
-
-<head>
-<title>My Log</title>
-<style>
-
-body {
-    font-family: Arial, sans-serif;
-    max-width: 800px;
-    margin: 40px auto;
-    line-height: 1.6;
-}
-
-li {
-    margin-bottom: 20px;
-}
-
-small {
-    color: gray;
-}
-
-</style>
-</head>
-<body>
-
-<h1>My Log Entries</h1>
-<ul>
-EOF
-
-cat entries.txt >> index.html
-
-cat >> index.html <<EOF
-</ul>
 </body>
 </html>
 EOF
 
-# Git operations
-git add .
-git commit -m "Added log entry: $TITLE"
-git push
 
-echo ""
-echo "--------------------------------"
-echo "Log entry created successfully"
-echo "Post URL:"
-echo "$POST"
-echo "--------------------------------"
+# Add entry before closing ul tag in index.html
+ENTRY="
+  <li>
+    <a href=\"posts/$FILENAME.html\">
+      <strong>$TITLE</strong><br>
+      <span>$DESCRIPTION</span>
+    </a>
+  </li>
+"
+
+sed -i "/<\/ul>/i\\$ENTRY" index.html
+
+
+echo "Created:"
+echo "$POST_FILE"
+echo "Updated index.html"
