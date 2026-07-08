@@ -1,0 +1,1 @@
+<li><a href="posts/2026-07-08-14-28.html">My first automated log entry</a></li>
