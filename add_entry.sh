@@ -1,51 +1,85 @@
 #!/bin/bash
 
-TITLE="$1"
+read -p "Enter title: " TITLE
+
+read -p "Enter description: " DESCRIPTION
+
 
 if [ -z "$TITLE" ]; then
-    echo "Usage: ./add-entry.sh \"your entry title\""
+    echo "Title cannot be empty"
     exit 1
 fi
 
-DATE=$(date +"%Y-%m-%d-%H-%M")
-FILENAME="posts/$DATE.html"
+# Create URL-friendly filename from title
+SLUG=$(echo "$TITLE" | \
+    tr '[:upper:]' '[:lower:]' | \
+    sed 's/ /-/g' | \
+    sed 's/[^a-z0-9-]//g')
 
-cat > "$FILENAME" <<EOF
+# Date and time
+DATE=$(date +"%Y-%m-%d")
+DATETIME=$(date +"%Y-%m-%d %H:%M:%S")
+
+
+# Create posts directory if missing
+mkdir -p posts
+
+# Post filename
+POST="posts/$SLUG.html"
+
+# Create individual post page
+cat > "$POST" <<EOF
 <!DOCTYPE html>
 <html>
 <head>
-<title>$TITLE</title>
-</head>
 
+<title>$TITLE</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    line-height: 1.6;
+}
+</style>
+</head>
 <body>
 
 <h1>$TITLE</h1>
-
-<p>Date: $(date)</p>
-
 <p>
-This is my log entry created from terminal.
+<b>Created:</b> $DATETIME
 </p>
 
-<a href="../index.html">Back to home</a>
+<hr>
+<p>
+$DESCRIPTION
+</p>
+<br>
+
+<a href="../index.html">Back to Log</a>
 
 </body>
+
 </html>
 EOF
 
+# Create entries storage file
+touch entries.txt
 
+# Add newest entry at the top of entries.txt
 echo "<li>
-<a href=\"$FILENAME\">$TITLE</a>
-</li>" >> entries.tmp
+<a href=\"$POST\"><b>$TITLE</b></a>
+<br>
+<small>$DESCRIPTION</small>
+<br>
+<small>Created: $DATETIME</small>
+</li>
+<br>" | cat - entries.txt > entries.tmp
 
+mv entries.tmp entries.txt
 
-if [ ! -f entries.txt ]; then
-    touch entries.txt
-fi
-
-
-echo "<li><a href=\"$FILENAME\">$TITLE</a></li>" >> entries.txt
-
+# Rebuild index.html
 
 cat > index.html <<EOF
 <!DOCTYPE html>
@@ -53,29 +87,47 @@ cat > index.html <<EOF
 
 <head>
 <title>My Log</title>
-</head>
+<style>
 
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 40px auto;
+    line-height: 1.6;
+}
+
+li {
+    margin-bottom: 20px;
+}
+
+small {
+    color: gray;
+}
+
+</style>
+</head>
 <body>
 
 <h1>My Log Entries</h1>
-
 <ul>
 EOF
 
-
 cat entries.txt >> index.html
-
 
 cat >> index.html <<EOF
 </ul>
-
 </body>
 </html>
 EOF
 
-
+# Git operations
 git add .
 git commit -m "Added log entry: $TITLE"
 git push
 
-echo "Entry created: $FILENAME"
+echo ""
+echo "--------------------------------"
+echo "Log entry created successfully"
+echo "Post URL:"
+echo "$POST"
+echo "--------------------------------"
